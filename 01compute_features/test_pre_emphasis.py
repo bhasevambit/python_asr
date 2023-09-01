@@ -8,11 +8,10 @@
 # wavデータを読み込むためのモジュール(wave)をインポート
 import wave
 
-# 数値演算用モジュール(numpy)をインポート
-import numpy as np
-
 # プロット用モジュール(matplotlib)をインポート
 import matplotlib.pyplot as plt
+# 数値演算用モジュール(numpy)をインポート
+import numpy as np
 
 #
 # メイン関数
@@ -49,11 +48,11 @@ if __name__ == "__main__":
 
     # FFTを実施する区間分の波形データを取り出す
     frame = waveform[target_index: target_index + fft_size]
-    
-    frame_emp = np.convolve(frame,np.array([1.0, -0.97]), mode='same')
+
+    frame_emp = np.convolve(frame, np.array([1.0, -0.97]), mode='same')
     # numpyの畳み込みでは0番目の要素が処理されない(window[i-1]が存在しないので)ため，
     # window[0-1]をwindow[0]で代用して処理する
-    frame_emp[0] -= 0.97*frame_emp[0]
+    frame_emp[0] -= 0.97 * frame_emp[0]
 
     h = np.zeros(fft_size)
     h[0] = 1.0
@@ -73,9 +72,9 @@ if __name__ == "__main__":
     absolute_h = np.abs(spectrum_h)
 
     # 振幅スペクトルは左右対称なので，左半分までのみを用いる
-    absolute = absolute[:np.int(fft_size/2) + 1]
-    absolute_emp = absolute_emp[:np.int(fft_size/2) + 1]
-    absolute_h = absolute_h[:np.int(fft_size/2) + 1]
+    absolute = absolute[:np.int(fft_size / 2) + 1]
+    absolute_emp = absolute_emp[:np.int(fft_size / 2) + 1]
+    absolute_h = absolute_h[:np.int(fft_size / 2) + 1]
 
     # 対数を取り、対数振幅スペクトルを計算
     log_absolute = np.log(absolute + 1E-7)
@@ -87,66 +86,65 @@ if __name__ == "__main__":
     #
 
     # プロットの描画領域を作成
-    plt.figure(figsize=(10,10))
+    plt.figure(figsize=(10, 10))
 
     # 2分割された描画領域の下側に
     # 対数振幅スペクトルをプロットする
     plt.subplot(3, 1, 1)
 
     # 横軸(周波数軸)を作成する
-    freq_axis = np.arange(np.int(fft_size/2)+1) \
-                * sampling_frequency / fft_size
-    
+    freq_axis = np.arange(np.int(fft_size / 2) + 1) \
+        * sampling_frequency / fft_size
+
     # 対数振幅スペクトルをプロット
     plt.plot(freq_axis, log_absolute, color='k')
 
     # プロットのタイトルと、横軸と縦軸のラベルを定義
-    #plt.title('log-absolute spectrum without pre-emphasis (x)')
+    # plt.title('log-absolute spectrum without pre-emphasis (x)')
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Value')
 
     # 横軸の表示領域を0～最大周波数に制限
-    plt.xlim([0, sampling_frequency / 2]) 
-    plt.ylim([0,15])
+    plt.xlim([0, sampling_frequency / 2])
+    plt.ylim([0, 15])
 
     # 2分割された描画領域の下側に
     # 対数振幅スペクトルをプロットする
     plt.subplot(3, 1, 2)
 
     # 横軸(周波数軸)を作成する
-    freq_axis = np.arange(np.int(fft_size/2)+1) \
-                * sampling_frequency / fft_size
-    
+    freq_axis = np.arange(np.int(fft_size / 2) + 1) \
+        * sampling_frequency / fft_size
+
     # 対数振幅スペクトルをプロット
     plt.plot(freq_axis, log_absolute_emp, color='k')
 
     # プロットのタイトルと、横軸と縦軸のラベルを定義
-    #plt.title('log-absolute spectrum with pre-emphasis (x_emp)')
+    # plt.title('log-absolute spectrum with pre-emphasis (x_emp)')
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Value')
 
     # 横軸の表示領域を0～最大周波数に制限
-    plt.xlim([0, sampling_frequency / 2]) 
-    plt.ylim([0,15])
+    plt.xlim([0, sampling_frequency / 2])
+    plt.ylim([0, 15])
 
     plt.subplot(3, 1, 3)
 
     # 横軸(周波数軸)を作成する
-    freq_axis = np.arange(np.int(fft_size/2)+1) \
-                * sampling_frequency / fft_size
-    
+    freq_axis = np.arange(np.int(fft_size / 2) + 1) \
+        * sampling_frequency / fft_size
+
     # 対数振幅スペクトルをプロット
     plt.plot(freq_axis, log_absolute_emp - log_absolute, linestyle='dashed', color='k')
     plt.plot(freq_axis, log_absolute_h, color='k')
 
     # プロットのタイトルと、横軸と縦軸のラベルを定義
-    #plt.title('log-absolute spectra of pre-emphasis filter (h) and (x_emp - x)')
+    # plt.title('log-absolute spectra of pre-emphasis filter (h) and (x_emp - x)')
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Value')
 
     # 横軸の表示領域を0～最大周波数に制限
-    plt.xlim([0, sampling_frequency / 2]) 
+    plt.xlim([0, sampling_frequency / 2])
 
     # プロットを保存する
     plt.savefig(out_plot)
-

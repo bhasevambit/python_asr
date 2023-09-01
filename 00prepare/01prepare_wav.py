@@ -5,17 +5,17 @@
 # また，変換したwavデータのリストを作成します．
 #
 
-# サンプリング周波数を変換するためのモジュール(sox)をインポート
-import sox
-
 # osモジュールをインポート
 import os
+
+# サンプリング周波数を変換するためのモジュール(sox)をインポート
+import sox
 
 #
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     # wavファイルが展開されたディレクトリ
     original_wav_dir = '../data/original/jsut_ver1.1/basic5000/wav'
 
@@ -38,11 +38,11 @@ if __name__ == "__main__":
     with open(os.path.join(out_scp_dir, 'wav.scp'), mode='w') as scp_file:
         # BASIC5000_0001.wav ~ BASIC5000_5000.wav に対して処理を繰り返し実行
         for i in range(5000):
-            filename = 'BASIC5000_%04d' % (i+1)
+            filename = 'BASIC5000_%04d' % (i + 1)
             # 変換元のオリジナルデータ (48000Hz)のファイル名
-            wav_path_in = os.path.join(original_wav_dir, filename+'.wav')
+            wav_path_in = os.path.join(original_wav_dir, filename + '.wav')
             # 変換後のデータ(16000Hz)の保存ファイル名
-            wav_path_out = os.path.join(out_wav_dir, filename+'.wav')
+            wav_path_out = os.path.join(out_wav_dir, filename + '.wav')
 
             print(wav_path_in)
             # ファイルが存在しない場合はエラー
@@ -51,10 +51,9 @@ if __name__ == "__main__":
                 exit()
 
             # サンプリング周波数の変換と保存を実行する
-            tfm.build_file(input_filepath=wav_path_in, 
+            tfm.build_file(input_filepath=wav_path_in,
                            output_filepath=wav_path_out)
 
             # wavファイルのリストを書き込む
-            scp_file.write('%s %s\n' % 
+            scp_file.write('%s %s\n' %
                            (filename, os.path.abspath(wav_path_out)))
-        

@@ -16,7 +16,7 @@ import os
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     # 全データが記述されているリストの置き場
     all_dir = '../data/label/all'
 
@@ -30,24 +30,24 @@ if __name__ == "__main__":
     out_train_large_dir = '../data/label/train_large'
 
     # 各出力ディレクトリが存在しない場合は作成する
-    for out_dir in [out_eval_dir, out_dev_dir, 
+    for out_dir in [out_eval_dir, out_dev_dir,
                     out_train_small_dir, out_train_large_dir]:
         os.makedirs(out_dir, exist_ok=True)
-    
+
     # wav.scp, text_char, text_kana, text_phoneそれぞれに同じ処理を行う
-    for filename in ['wav.scp', 'text_char', 
+    for filename in ['wav.scp', 'text_char',
                      'text_kana', 'text_phone']:
         # 全データを読み込みモードで，/評価/開発/学習データリストを書き込みモードで開く
-        with open(os.path.join(all_dir, filename), 
+        with open(os.path.join(all_dir, filename),
                   mode='r') as all_file, \
-                  open(os.path.join(out_eval_dir, filename), 
-                  mode='w') as eval_file, \
-                  open(os.path.join(out_dev_dir, filename), 
-                  mode='w') as dev_file, \
-                  open(os.path.join(out_train_small_dir, filename), 
-                  mode='w') as train_small_file, \
-                  open(os.path.join(out_train_large_dir, filename), 
-                  mode='w') as train_large_file:
+            open(os.path.join(out_eval_dir, filename),
+                 mode='w') as eval_file, \
+            open(os.path.join(out_dev_dir, filename),
+                 mode='w') as dev_file, \
+            open(os.path.join(out_train_small_dir, filename),
+                 mode='w') as train_small_file, \
+            open(os.path.join(out_train_large_dir, filename),
+                 mode='w') as train_large_file:
             # 1行ずつ読み込み，評価/開発/学習データリストに書き込んでいく
             for i, line in enumerate(all_file):
                 if i < 250:
@@ -62,4 +62,3 @@ if __name__ == "__main__":
                     if i < 1500:
                         # 501～1500: 学習（小）データリストへ書き込み
                         train_small_file.write(line)
-

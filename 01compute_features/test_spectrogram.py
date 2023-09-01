@@ -8,11 +8,10 @@
 # wavデータを読み込むためのモジュール(wave)をインポート
 import wave
 
-# 数値演算用モジュール(numpy)をインポート
-import numpy as np
-
 # プロット用モジュール(matplotlib)をインポート
 import matplotlib.pyplot as plt
+# 数値演算用モジュール(numpy)をインポート
+import numpy as np
 
 #
 # メイン関数
@@ -45,7 +44,7 @@ if __name__ == "__main__":
         waveform = np.frombuffer(waveform, dtype=np.int16)
 
     # フレームサイズをミリ秒からサンプル数に変換
-    frame_size = int(sample_frequency \
+    frame_size = int(sample_frequency
                      * frame_size * 0.001)
 
     # フレームシフトをミリ秒からサンプル数へ変換
@@ -62,7 +61,7 @@ if __name__ == "__main__":
     num_frames = (num_samples - frame_size) // frame_shift + 1
 
     # スペクトログラムの行列を用意
-    spectrogram = np.zeros((num_frames, int(fft_size/2)+1))
+    spectrogram = np.zeros((num_frames, int(fft_size / 2) + 1))
 
     # 1フレームずつ振幅スペクトルを計算する
     for frame_idx in range(num_frames):
@@ -70,12 +69,12 @@ if __name__ == "__main__":
         start_index = frame_idx * frame_shift
 
         # 1フレーム分の波形を抽出
-        frame = waveform[start_index : \
+        frame = waveform[start_index:
                          start_index + frame_size].copy()
 
         # ハミング窓を掛ける
         frame = frame * np.hamming(frame_size)
-      
+
         # 高速フーリエ変換(FFT)を実行
         spectrum = np.fft.fft(frame, n=fft_size)
 
@@ -83,7 +82,7 @@ if __name__ == "__main__":
         absolute = np.abs(spectrum)
 
         # 振幅スペクトルは左右対称なので，左半分までのみを用いる
-        absolute = absolute[:int(fft_size/2) + 1]
+        absolute = absolute[:int(fft_size / 2) + 1]
 
         # 対数を取り、対数振幅スペクトルを計算
         log_absolute = np.log(absolute + 1E-7)
@@ -96,7 +95,7 @@ if __name__ == "__main__":
     #
 
     # プロットの描画領域を作成
-    plt.figure(figsize=(10,10))
+    plt.figure(figsize=(10, 10))
 
     # 描画領域を縦に2分割し、
     # 上側に時間波形をプロットする
@@ -104,7 +103,7 @@ if __name__ == "__main__":
 
     # 横軸(時間軸)を作成する
     time_axis = np.arange(num_samples) / sample_frequency
-    
+
     # 時間波形のプロット
     plt.plot(time_axis, waveform)
 
@@ -119,7 +118,7 @@ if __name__ == "__main__":
     # 2分割された描画領域の下側に
     # スペクトログラムをプロットする
     plt.subplot(2, 1, 2)
-    
+
     # スペクトログラムの最大値を0に合わせて
     # カラーマップのレンジを調整
     spectrogram -= np.max(spectrogram)
@@ -127,13 +126,13 @@ if __name__ == "__main__":
     vmin = - np.abs(np.min(spectrogram)) * 0.7
 
     # ヒストグラムをプロット
-    plt.imshow(spectrogram.T[-1::-1,:], 
-               extent=[0, num_samples / sample_frequency, 
+    plt.imshow(spectrogram.T[-1::-1, :],
+               extent=[0, num_samples / sample_frequency,
                        0, sample_frequency / 2],
-               cmap = 'gray',
-               vmax = vmax,
-               vmin = vmin,
-               aspect = 'auto')
+               cmap='gray',
+               vmax=vmax,
+               vmin=vmin,
+               aspect='auto')
 
     # プロットのタイトルと、横軸と縦軸のラベルを定義
     plt.title('spectrogram')
@@ -142,4 +141,3 @@ if __name__ == "__main__":
 
     # プロットを保存する
     plt.savefig(out_plot)
-

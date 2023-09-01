@@ -4,18 +4,20 @@
 # 学習データから，特徴量の平均と標準偏差を求めます．
 #
 
+# os, sysモジュールをインポート
+import os
+
 # 数値演算用モジュール(numpy)をインポート
 import numpy as np
 
-# os, sysモジュールをインポート
-import os
-import sys
+# import sys
+
 
 #
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     #
     # 設定ここから
     #
@@ -37,7 +39,7 @@ if __name__ == "__main__":
             './%s/train_large' % (feature)
 
         # 特徴量ファイルリストと出力先をリストにする
-        feat_scp_list = [train_small_feat_scp, 
+        feat_scp_list = [train_small_feat_scp,
                          train_large_feat_scp]
         out_dir_list = [train_small_out_dir,
                         train_large_out_dir]
@@ -75,7 +77,7 @@ if __name__ == "__main__":
                     num_frames = int(parts[2])
                     # 3番目が次元数
                     num_dims = int(parts[3])
-                                 
+
                     # 特徴量データを特徴量ファイルから読み込む
                     feature = np.fromfile(feat_path,
                                           dtype=np.float32)
@@ -84,9 +86,9 @@ if __name__ == "__main__":
                     # ベクトル(要素数=フレーム数*次元数)として
                     # 格納されているこれをフレーム数 x 次元数の
                     # 行列形式に変換する
-                    feature = feature.reshape(num_frames, 
+                    feature = feature.reshape(num_frames,
                                               num_dims)
-     
+
                     # 最初のファイルを処理した時に，
                     # 平均と分散を初期化
                     if i == 0:
@@ -96,17 +98,17 @@ if __name__ == "__main__":
                     # 総フレーム数を加算
                     total_frames += num_frames
                     # 特徴量ベクトルのフレーム総和を加算
-                    feat_mean += np.sum(feature, 
+                    feat_mean += np.sum(feature,
                                         axis=0)
                     # 特徴量ベクトルの二乗のフレーム総和を加算
-                    feat_var += np.sum(np.power(feature,2), 
+                    feat_var += np.sum(np.power(feature, 2),
                                        axis=0)
-            
+
             # 総フレーム数で割って平均値ベクトルを計算
             feat_mean /= total_frames
             # 分散値ベクトルを計算
             feat_var = (feat_var / total_frames) \
-                       - np.power(feat_mean,2)
+                - np.power(feat_mean, 2)
             # 平方根を取って標準偏差ベクトルを算出
             feat_std = np.sqrt(feat_var)
 
@@ -124,4 +126,3 @@ if __name__ == "__main__":
                 for i in range(np.size(feat_std)):
                     file_o.write('%e ' % (feat_std[i]))
                 file_o.write('\n')
-

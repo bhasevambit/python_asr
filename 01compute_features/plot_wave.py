@@ -7,11 +7,10 @@
 # wavデータを読み込むためのモジュール(wave)をインポート
 import wave
 
-# 数値演算用モジュール(numpy)をインポート
-import numpy as np
-
 # プロット用モジュール(matplotlib)をインポート
 import matplotlib.pyplot as plt
+# 数値演算用モジュール(numpy)をインポート
+import numpy as np
 
 #
 # メイン関数
@@ -55,12 +54,12 @@ if __name__ == "__main__":
     #
     # 読み込んだ波形(waveform)をプロットする
     #
-    
+
     # 横軸(時間軸)を作成する
     time_axis = np.arange(num_samples) / sampling_frequency
 
     # プロットの描画領域を作成
-    plt.figure(figsize=(10,4))
+    plt.figure(figsize=(10, 4))
 
     # プロット
     plt.plot(time_axis, waveform)
@@ -74,4 +73,3 @@ if __name__ == "__main__":
 
     # プロットを保存する
     plt.savefig(out_plot)
-
