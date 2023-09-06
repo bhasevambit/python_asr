@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # 以下の時刻は音素"o"を発話している
     target_time = 0.58
     # 以下の時刻は音素"a"を発話している
-    target_time = 0.73
+    # target_time = 0.73
 
     # FFT(高速フーリエ変換)を行う範囲のサンプル数
     # 2のべき乗である必要がある
@@ -49,7 +49,8 @@ if __name__ == "__main__":
         waveform = np.frombuffer(waveform, dtype=np.int16)
 
     # 分析する時刻をサンプル番号に変換
-    target_index = np.int(target_time * sampling_frequency)
+    # target_index = np.int(target_time * sampling_frequency)
+    target_index = np.int64(target_time * sampling_frequency)
 
     # FFTを実施する区間分の波形データを取り出す
     frame = waveform[target_index:
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     # FFTを実施する
     spectrum = np.fft.fft(frame)
 
-    # 対数パワースペクトルを得る
+    # 対数パワースペクトルを得る (フロアリング処理も合わせて実施)
     log_power = 2 * np.log(np.abs(spectrum) + 1E-7)
 
     # 対数パワースペクトルの逆フーリエ変換により
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     cepstrum = np.fft.ifft(log_power)
 
     # ケプストラムの高次部分をゼロにする
-    cepstrum_low = cepstrum.copy()
+    cepstrum_low = cepstrum.copy()  # コピー後のリストに対して処理を行うため、.copy()による独立した複製リストcepstrum_lowを作成
     cepstrum_low[(cep_threshold + 1):-(cep_threshold)] = 0.0
 
     # 高域カットしたケプストラムを再度フーリエ変換し，
